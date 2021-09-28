@@ -4,15 +4,42 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private static PlayerManager _instance;
+    [Header("PLAYER HEALTH")]
+    public bool playerIsAlive = true;
+
+    private void Awake()
     {
-        
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        _instance = this;
+        DontDestroyOnLoad(this.gameObject);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        //CheckPlayerLife();
     }
+
+    public static PlayerManager Instance
+    {
+        get { return _instance; }
+    }
+
+    /*private void CheckPlayerLife() 
+    {
+        if (!playerIsAlive)
+        {
+            playerDead();
+        }
+    }
+
+    public void playerDead()
+    {
+        GameManager.endGame();
+    }*/
 }

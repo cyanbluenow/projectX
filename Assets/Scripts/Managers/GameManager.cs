@@ -1,12 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     [Header("INSTANCE")]
     private static GameManager _instance;
+    private bool gameIsPause = false;
 
+    private void Start()
+    {
+        loadScene(SceneConfig.mainTitle);
+    }
 
     private void Awake()
     {
@@ -22,26 +28,52 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        endGame();
+        openMenu();
+    }
+
+    public static GameManager Instance
+    {
+        get { return _instance; }
     }
 
     public void startGame() 
     {
-        PlayerController.changePlayerIsAlive(true);
-        SceneController.loadScene(SceneConfig.firstScene);    
+        loadScene(SceneConfig.firstScene);    
     }
 
     public void endGame() 
     {
-        if (!PlayerController.playerIsAlive)
+        loadScene(SceneConfig.endScene);
+    }
+
+
+
+    public static void lockCursor()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    public static void unlockCursor()
+    {
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    void openMenu()
+    {
+        if (Input.GetKeyDown(ControllerConfig.openPlayerMenu) && !gameIsPause)
         {
-            SceneController.loadScene(SceneConfig.endScene);
+            unlockCursor();
+            loadScene(SceneConfig.gameOptions);
         }
     }
 
-    public void quitGame()
+    public void saveGame() { }
+
+    public void loadGame() { }
+
+    public  void loadScene(string sceneName)
     {
-        Application.Quit();
+        SceneManager.LoadScene(sceneName);
     }
 
 }
